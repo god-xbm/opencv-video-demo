@@ -1,0 +1,15 @@
+# 构建产物
+/build/
+/build-debug/
+/dist/
+
+# 运行产物（输出视频体积大，不入库）
+output/*.mp4
+output/*.avi
+output/*.png
+
+# 编辑器
+.vscode/
+*.exe
+*.o
+*.obj

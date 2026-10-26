@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视觉素材查看与标注程序 · 讲解</title>
+<style>
+  :root{
+    --cream:#FDF8F3;
+    --paper:#FFFFFF;
+    --ink:#3D405B;
+    --ink-soft:#5C5F7A;
+    --terra:#E07A5F;
+    --mint:#81B29A;
+    --sun:#F2CC8F;
+    --line:#E8DDD2;
+    --code-bg:#2B2D42;
+    --code-ink:#F4F1EA;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
+    font-size:18px;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:56px 32px 120px;}
+
+  header.hero{
+    background:linear-gradient(135deg,#FFF3E6 0%,#FCE9DC 55%,#F6E3E8 100%);
+    border-radius:28px;
+    padding:52px 44px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid #F0DCCB;
+    margin-bottom:52px;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute;right:-60px;bottom:-80px;
+    width:260px;height:260px;border-radius:50%;
+    background:rgba(129,178,154,.18);
+  }
+  header.hero .kicker{
+    display:inline-block;
+    background:var(--terra);color:#fff;
+    font-size:14px;letter-spacing:2px;
+    padding:6px 16px;border-radius:99px;
+    margin-bottom:20px;
+  }
+  header.hero h1{
+    font-size:40px;line-height:1.3;margin:0 0 16px;
+    font-weight:800;letter-spacing:-.5px;
+  }
+  header.hero p{margin:0;color:var(--ink-soft);font-size:19px;max-width:640px;}
+
+  h2{
+    font-size:28px;margin:64px 0 20px;
+    padding-bottom:12px;
+    border-bottom:3px solid var(--sun);
+    display:inline-block;
+    font-weight:800;
+  }
+  h3{font-size:21px;margin:36px 0 12px;color:var(--terra);font-weight:700;}
+  p{margin:14px 0;}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:28px 30px;
+    margin:24px 0;
+    box-shadow:0 2px 0 rgba(224,122,95,.06);
+  }
+  .card.warn{border-left:6px solid var(--terra);background:#FFF9F6;}
+  .card.tip{border-left:6px solid var(--mint);background:#F7FBF9;}
+  .card.note{border-left:6px solid var(--sun);background:#FFFCF4;}
+
+  code{
+    font-family:"Cascadia Code",Consolas,Monaco,monospace;
+    background:#F4EFE9;
+    color:#B5533C;
+    padding:2px 7px;
+    border-radius:6px;
+    font-size:.92em;
+  }
+  pre{
+    background:var(--code-bg);
+    color:var(--code-ink);
+    padding:22px 24px;
+    border-radius:16px;
+    overflow-x:auto;
+    font-family:"Cascadia Code",Consolas,Monaco,monospace;
+    font-size:15px;
+    line-height:1.75;
+    margin:20px 0;
+  }
+  pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  pre .c{color:#8D9BAA;}
+  pre .k{color:#F2CC8F;}
+  pre .s{color:#A8D5BA;}
+  pre .hl{background:rgba(224,122,95,.28);border-radius:4px;padding:0 3px;}
+
+  table{
+    width:100%;border-collapse:separate;border-spacing:0;
+    margin:24px 0;font-size:16.5px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:16px;overflow:hidden;
+  }
+  th{
+    background:#F7EFE7;text-align:left;
+    padding:14px 18px;font-weight:700;
+    border-bottom:2px solid var(--line);
+    font-size:16px;
+  }
+  td{padding:13px 18px;border-bottom:1px solid #F2EAE2;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+
+  ul,ol{padding-left:26px;}
+  li{margin:9px 0;}
+
+  .punch{
+    background:var(--ink);
+    color:#FFF6EC;
+    border-radius:20px;
+    padding:30px 34px;
+    margin:36px 0;
+    font-size:20px;
+    line-height:1.75;
+  }
+  .punch strong{color:var(--sun);}
+
+  .fig{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:24px;
+    margin:28px 0;
+    text-align:center;
+  }
+  .fig figcaption{
+    font-size:15px;color:var(--ink-soft);
+    margin-top:14px;
+  }
+  svg{max-width:100%;height:auto;}
+
+  .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:32px;height:32px;border-radius:50%;
+    background:var(--terra);color:#fff;
+    font-weight:800;font-size:16px;
+    margin-right:10px;flex:none;
+  }
+  .step{display:flex;align-items:flex-start;margin:22px 0;}
+  .step .body{flex:1;}
+
+  .toc{
+    background:var(--paper);border:1px dashed #D9C9B8;
+    border-radius:20px;padding:26px 32px;margin:0 0 48px;
+  }
+  .toc h3{margin:0 0 14px;color:var(--ink);font-size:18px;letter-spacing:1px;}
+  .toc ol{margin:0;padding-left:22px;font-size:16.5px;}
+  .toc a{color:var(--ink-soft);text-decoration:none;border-bottom:1px dotted #C9B9A8;}
+  .toc a:hover{color:var(--terra);}
+
+  footer{
+    margin-top:80px;padding-top:28px;
+    border-top:1px solid var(--line);
+    color:var(--ink-soft);font-size:15px;text-align:center;
+  }
+  @media (max-width:640px){
+    body{font-size:17px;}
+    .wrap{padding:32px 20px 80px;}
+    header.hero{padding:36px 26px;border-radius:20px;}
+    header.hero h1{font-size:28px;}
+    h2{font-size:23px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="kicker">第一周综合练习</span>
+  <h1>视觉素材查看与标注程序<br>代码之外，你还需要知道的事</h1>
+  <p>这份文档不重复贴代码——代码里已经写了注释。这里讲的是「为什么这么写」：
+     哪些地方是 OpenCV 在坑你，哪些地方是评分点在等你，以及答辩时最容易被追问的那几个问题。</p>
+</header>
+
+<nav class="toc">
+  <h3>目 录</h3>
+  <ol>
+    <li><a href="#env">你的电脑差点做不了这道题</a></li>
+    <li><a href="#trap">OpenCV 的三个反直觉</a></li>
+    <li><a href="#reader">老师为什么要你自己写一个类</a></li>
+    <li><a href="#overlay">那 20 分的一致性，其实只靠一行代码</a></li>
+    <li><a href="#fps">两个 FPS：最容易答错的问题</a></li>
+    <li><a href="#errors">报错速查表</a></li>
+    <li><a href="#qa">答辩预演：老师可能问的 8 个问题</a></li>
+  </ol>
+</nav>
+
+<h2 id="env">一、你的电脑差点做不了这道题</h2>
+
+<p>开始动手之前，我先把这台电脑的「兵器库」翻了一遍，结果是这样的：</p>
+
+<table>
+  <tr><th>需要的东西</th><th>当时的状况</th></tr>
+  <tr><td>CMake</td><td>❌ 任何位置都没有</td></tr>
+  <tr><td>OpenCV</td><td>❌ 库、头文件、配置文件，全都没有</td></tr>
+  <tr><td>Visual Studio / MSVC</td><td>❌ 完全没装</td></tr>
+  <tr><td>C++ 编译器</td><td>⚠️ 只有一个：Dev-C++ 自带的 <b>TDM-GCC 4.9.2</b></td></tr>
+  <tr><td>vcpkg / conan / choco / scoop</td><td>❌ 四个包管理器一个都没有</td></tr>
+</table>
+
+<p>关键在那唯一一个编译器：<b>它是 2014 年发布的</b>。</p>
+
+<div class="card warn">
+  <p style="margin-top:0"><b>为什么 TDM-GCC 4.9.2 干不了这件事？</b></p>
+  <ul style="margin-bottom:0">
+    <li>它的标准库目录里<b>没有 <code>&lt;filesystem&gt;</code></b>。而这个作业要用
+        <code>std::filesystem::create_directories</code> 来「自动创建 output 目录」。</li>
+    <li>它对 C++17 的支持是残缺的，而 OpenCV 5.x 的构建配置明确要求 <code>cxx_std_17</code>。</li>
+    <li>它不支持 CMake 工程（Dev-C++ 5.11 只有自己的工程文件格式），
+        而作业第一条就是「使用 CMakeLists.txt 管理工程」。</li>
+  </ul>
+</div>
+
+<p>那为什么不直接下 OpenCV 官方的 Windows 安装包？因为<b>那个包是 MSVC 编译的</b>，
+里面的 C++ 符号是 MSVC 的 ABI，MinGW 的链接器根本认不出来。想用它就得连 Visual Studio
+一起装（3 GB 起步）。</p>
+
+<div class="card tip">
+  <p style="margin-top:0"><b>最后的解法：MSYS2</b></p>
+  <p style="margin-bottom:0">它用 pacman 一条命令就能装齐「现代 GCC + CMake + Ninja + <b>预编译好的 OpenCV</b>」，
+     而且这些包彼此出自同一套工具链，不存在 ABI 打架的问题。
+     相当于别人已经帮你把 OpenCV 编译好、还顺手配好了 CMake 配置文件。</p>
+</div>
+
+<h3>过程中踩到的第一个真坑</h3>
+
+<p>照理说装完就完事了，但这里有个非常隐蔽的陷阱。</p>
+
+<p>MSYS2 的 OpenCV 在编译时启用了 <code>-DWITH_QT=ON</code>——意思是<b>窗口后端用的是 Qt</b>，
+不是 Windows 原生窗口。而 Qt 相关的两个包在 OpenCV 包里只被标成
+<code>optdepends</code>（<b>可选</b>依赖），所以 pacman <b>不会自动帮你装</b>。</p>
+
+<div class="punch">
+  少了它的症状是：<strong>编译完美通过 → 运行一句错都不报 → 但窗口就是不出来。</strong><br>
+  没有异常、没有崩溃、没有任何提示，程序就这么静默地什么都不做。
+</div>
+
+<p>所以安装命令必须显式带上：</p>
+
+<pre><code>pacman -S mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-qt6-5compat</code></pre>
+
+<p>并且要先跑一次 <code>env_check</code> 确认 <code>GUI:</code> 那一行不是 <code>NONE</code>，
+再动手写业务代码。这就是我坚持「先做环境自检，再写 500 行」的原因——
+在错误的地基上盖楼，是最高成本的错误。</p>
+
+<h2 id="trap">二、OpenCV 的三个反直觉</h2>
+
+<p>这三个点，考试会考、答辩会问、写错了还不会有编译错误。它们属于「不知道就一定会栽」的类型。</p>
+
+<h3>反直觉之一：颜色顺序是 BGR，不是 RGB</h3>
+
+<figure class="fig">
+  <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="640" height="220" fill="#FFFFFF"/>
+    <text x="320" y="30" text-anchor="middle" font-family="Microsoft YaHei" font-size="17" fill="#3D405B" font-weight="700">同一个内存块，两种读法</text>
+
+    <rect x="40" y="62" width="72" height="56" rx="10" fill="#4A90D9"/>
+    <rect x="120" y="62" width="72" height="56" rx="10" fill="#5FB878"/>
+    <rect x="200" y="62" width="72" height="56" rx="10" fill="#E05C5C"/>
+    <text x="76" y="96" text-anchor="middle" font-family="Consolas" font-size="16" fill="#fff">[0]</text>
+    <text x="156" y="96" text-anchor="middle" font-family="Consolas" font-size="16" fill="#fff">[1]</text>
+    <text x="236" y="96" text-anchor="middle" font-family="Consolas" font-size="16" fill="#fff">[2]</text>
+    <text x="76" y="142" text-anchor="middle" font-family="Microsoft YaHei" font-size="15" fill="#5C5F7A">蓝 Blue</text>
+    <text x="156" y="142" text-anchor="middle" font-family="Microsoft YaHei" font-size="15" fill="#5C5F7A">绿 Green</text>
+    <text x="236" y="142" text-anchor="middle" font-family="Microsoft YaHei" font-size="15" fill="#5C5F7A">红 Red</text>
+
+    <path d="M300 90 L360 90" stroke="#E07A5F" stroke-width="2" stroke-dasharray="5 4"/>
+    <path d="M360 90 l-9 -5 v10 z" fill="#E07A5F"/>
+
+    <text x="470" y="86" text-anchor="middle" font-family="Consolas" font-size="15" fill="#B5533C">Vec3b bgr = img.at&lt;Vec3b&gt;(y,x);</text>
+    <text x="470" y="112" text-anchor="middle" font-family="Consolas" font-size="15" fill="#B5533C">bgr[0]=B  bgr[1]=G  bgr[2]=R</text>
+    <text x="320" y="190" text-anchor="middle" font-family="Microsoft YaHei" font-size="15" fill="#81B29A">所以纯红是 Scalar(0, 0, 255)，不是 Scalar(255, 0, 0)</text>
+  </svg>
+  <figcaption>OpenCV 的颜色一律按 B、G、R 排列，这在画图、取色、写叠加文字时全都适用</figcaption>
+</figure>
+
+<p>这道题里它出现了三次：<code>at&lt;Vec3b&gt;</code> 的取值顺序、<code>putText</code> 的颜色参数、
+<code>rectangle</code> 的边框色。任何一处写成 RGB 顺序，颜色就会错得很明显。</p>
+
+<p>顺带一提：叠加文字用的是 <code>Scalar(0, 255, 255)</code>，那是 BGR 顺序下的<b>黄色</b>
+（B=0，G=255，R=255 → 红+绿=黄）。这个小细节可以顺手在答辩时说出来，证明你真的懂 BGR。</p>
+
+<h3>反直觉之二：<code>at&lt;T&gt;</code> 的参数是 (行, 列)</h3>
+
+<p>也就是 <code>(y, x)</code>，不是 <code>(x, y)</code>。</p>
+
+<div class="card warn">
+  <p style="margin-top:0"><b>写反了会怎样？</b></p>
+  <p style="margin-bottom:0">不会有任何报错，也不会崩溃——你只是<b>读到了另一个像素</b>。
+     在方方正正的图上，两种顺序都能"取到"一个值，所以程序看起来完全正常，
+     只有对着画面逐点核对时才会发现坐标和颜色都对不上。<br>
+     这是 OpenCV 里最典型的"静默错误"。</p>
+</div>
+
+<p>正确的写法：</p>
+
+<pre><code><span class="c">// at&lt;类型&gt;(行, 列) —— 行是 y，列是 x</span>
+<span class="k">const</span> cv::Vec3b bgr = image.at&lt;cv::Vec3b&gt;(y, x);</code></pre>
+
+<h3>反直觉之三：<code>waitKey</code> 不只是"等按键"</h3>
+
+<p>新手容易以为 <code>waitKey</code> 就是个输入函数。其实它还负责两件必不可少的事：</p>
+
+<ol>
+  <li><b>驱动窗口刷新</b>——不调用它，<code>imshow</code> 显示的内容永远不会真正画到屏幕上。</li>
+  <li><b>处理事件</b>——鼠标点击回调、窗口关闭、键盘输入，全靠它在背后分发。</li>
+</ol>
+
+<p>所以视频模式里必须<b>每帧都调一次</b> <code>waitKey(delay)</code>，
+而且这个 <code>delay</code> 还兼职做了"播放速度控制"：</p>
+
+<pre><code><span class="k">const</span> <span class="k">int</span> delayMs = <span class="k">static_cast</span>&lt;<span class="k">int</span>&gt;(1000.0 / fps + 0.5);
+
+<span class="k">const</span> <span class="k">int</span> key = cv::waitKey(delayMs);   <span class="c">// 返回 -1 表示这段时间内没按键</span>
+<span class="k">if</span> (key == 27) {                     <span class="c">// 27 = Esc</span>
+    userInterrupted = <span class="k">true</span>;
+    <span class="k">break</span>;
+}</code></pre>
+
+<div class="card note">
+  <p style="margin-top:0"><b>为什么 delay 要夹在 [1, 100] 之间？</b></p>
+  <p style="margin-bottom:0">下限 1：即使源帧率很高，也至少给窗口一次刷新机会，
+     同时避免 <code>waitKey(0)</code> 那种"无限等待"的语义混进来。<br>
+     上限 100：万一元数据异常算出几千毫秒，程序看起来就像卡死了。</p>
+</div>
+
+<h2 id="reader">三、老师为什么要你自己写一个类</h2>
+
+<p>题目里 <code>VideoReader</code> 这个类单独占了 15 分。这看着挺小题大做——
+不就是包一个 <code>VideoCapture</code> 吗？</p>
+
+<p>关键在于评分点写的是「<b>按职责划分</b>」和「主程序<b>不直接操作</b>类内部的 VideoCapture」。
+所以老师看的不是"能不能读视频"，而是<b>你有没有封装意识</b>。</p>
+
+<figure class="fig">
+  <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="640" height="260" fill="#FFFFFF"/>
+
+    <rect x="230" y="46" width="180" height="168" rx="18" fill="#FFF3E6" stroke="#E07A5F" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="320" y="76" text-anchor="middle" font-family="Microsoft YaHei" font-size="17" fill="#B5533C" font-weight="700">VideoReader</text>
+    <text x="320" y="104" text-anchor="middle" font-family="Consolas" font-size="13" fill="#5C5F7A">m_capture (private)</text>
+    <text x="320" y="126" text-anchor="middle" font-family="Consolas" font-size="13" fill="#5C5F7A">m_frameNumber (private)</text>
+    <text x="320" y="148" text-anchor="middle" font-family="Consolas" font-size="13" fill="#5C5F7A">m_fps / m_size (private)</text>
+    <line x1="252" y1="162" x2="388" y2="162" stroke="#E8DDD2" stroke-width="1.5"/>
+    <text x="320" y="186" text-anchor="middle" font-family="Consolas" font-size="13" fill="#81B29A">isOpened() / readNext()</text>
+    <text x="320" y="205" text-anchor="middle" font-family="Consolas" font-size="13" fill="#81B29A">frameNumber() / fps()</text>
+
+    <rect x="36" y="96" width="150" height="68" rx="14" fill="#EEF6F2" stroke="#81B29A" stroke-width="2"/>
+    <text x="111" y="126" text-anchor="middle" font-family="Microsoft YaHei" font-size="15" fill="#4A7C64" font-weight="700">主程序</text>
+    <text x="111" y="148" text-anchor="middle" font-family="Consolas" font-size="12" fill="#5C5F7A">video_mode.cpp</text>
+
+    <path d="M188 130 L226 130" stroke="#81B29A" stroke-width="2.5"/>
+    <path d="M226 130 l-9 -5 v10 z" fill="#81B29A"/>
+    <text x="207" y="120" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#4A7C64">只走接口</text>
+
+    <path d="M226 158 L188 158" stroke="#D9C9B8" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="207" y="176" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#B0A294">禁止穿透</text>
+
+    <rect x="452" y="96" width="152" height="68" rx="14" fill="#F7EFE7" stroke="#D9C9B8" stroke-width="2"/>
+    <text x="528" y="126" text-anchor="middle" font-family="Consolas" font-size="13" fill="#5C5F7A">cv::VideoCapture</text>
+    <text x="528" y="148" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#8A7F72">被完全封在内部</text>
+
+    <path d="M412 130 L448 130" stroke="#D9C9B8" stroke-width="2"/>
+    <path d="M448 130 l-9 -5 v10 z" fill="#D9C9B8"/>
+  </svg>
+  <figcaption>VideoReader 的边界：外面只能看到公开接口，VideoCapture 被关在里面</figcaption>
+</figure>
+
+<h3>我是怎么让这条要求「强制执行」的</h3>
+
+<p>光靠自己记得别在主程序里写 <code>cv::VideoCapture</code>，是不够可靠的。所以这里用了一个小技巧：</p>
+
+<div class="card tip">
+  <p style="margin-top:0"><b>把 VideoCapture 挡在头文件之外</b></p>
+  <p>在 <code>video_reader.h</code> 里，<code>cv::VideoCapture</code> <b>只做前置声明</b>：</p>
+  <pre style="margin:12px 0"><code><span class="k">namespace</span> cv { <span class="k">class</span> VideoCapture; }   <span class="c">// 只声明，不定义</span></code></pre>
+  <p>真正的 <code>#include &lt;opencv2/videoio.hpp&gt;</code> 只出现在 <code>video_reader.cpp</code> 内部，
+     私有成员用 <code>std::unique_ptr&lt;cv::VideoCapture&gt;</code> 持有。</p>
+  <p style="margin-bottom:0">这样 <code>video_mode.cpp</code>（主程序）<b>根本拿不到这个类型</b>。
+     谁要是写一句 <code>cv::VideoCapture cap;</code>，<b>编译直接失败</b>（不完整类型）。</p>
+</div>
+
+<p>这就是所谓的「让编译器当守门员」。比在 README 里写一句「请注意不要这样做」要可靠一万倍。</p>
+
+<p>验证方法（一条命令）：</p>
+
+<pre><code>rg <span class="s">"VideoCapture"</span> src/ include/
+<span class="c"># 只会命中两个文件：</span>
+<span class="c">#   include/video_reader.h    （前置声明）</span>
+<span class="c">#   src/video_reader.cpp      （真实使用）</span></code></pre>
+
+<h3>帧号从 1 开始，还是从 0 开始？</h3>
+
+<p>这是个必须"想清楚"而不是"随手定"的细节，因为它会直接影响收尾时的统计。</p>
+
+<table>
+  <tr><th>方案</th><th>含义</th><th>风险</th></tr>
+  <tr>
+    <td><b>1 基（本工程采用）</b></td>
+    <td><code>frameNumber()</code> = 已成功读取的帧数</td>
+    <td>无。屏幕显示 <code>Frame 1 / 750</code>，无需 <code>+1</code> 换算</td>
+  </tr>
+  <tr>
+    <td>0 基</td>
+    <td>与 <code>CAP_PROP_POS_FRAMES</code> 语义对齐</td>
+    <td>内部是 0、界面要显示 1，两套编号容易混</td>
+  </tr>
+</table>
+
+<p>更关键的是<b>失败时要不要推进帧号</b>：</p>
+
+<pre><code><span class="k">bool</span> VideoReader::readNext(cv::Mat&amp; frame)
+{
+    cv::Mat temp;
+    <span class="k">if</span> (!m_capture-&gt;read(temp) || temp.empty()) {
+        <span class="k">return</span> <span class="k">false</span>;          <span class="c">// 帧号保持不变</span>
+    }
+    frame = temp;
+    ++m_frameNumber;              <span class="c">// <span class="hl">成功之后才加</span></span>
+    <span class="k">return</span> <span class="k">true</span>;
+}</code></pre>
+
+<p>如果读到末尾（EOF）也把帧号 <code>+1</code>，最后的帧号就会比总帧数多 1，
+收尾打印「共处理 N 帧」就多算了一帧。这是一个非常常见的 off-by-one 错误。</p>
+
+<h2 id="overlay">四、那 20 分的一致性，其实只靠一行代码</h2>
+
+<p>「保存结果」这一块里有一条要求，很多人会理解错：</p>
+
+<div class="card note">
+  <p style="margin:0"><b>输出视频中显示的帧号、分辨率和处理 FPS，必须与处理画面一致。</b></p>
+</div>
+
+<p>直觉做法是"画两遍"：显示前画一次，写盘前再画一次。但只要你两处的颜色、字号、
+文字格式有任何一点不同，就不一致了——而且这种差异肉眼很难发现，扣分却照扣。</p>
+
+<p>正确做法是<b>只画一次</b>：</p>
+
+<pre><code><span class="k">if</span> (!reader.readNext(frame)) <span class="k">break</span>;   <span class="c">// 自然结束</span>
+fpsMeter.tick();
+
+drawOverlay(frame, info);             <span class="c">// ★ 原地画，唯一的一次</span>
+
+sink.write(frame);                    <span class="c">// 写盘</span>
+cv::imshow(kWindowName, frame);       <span class="c">// 显示  ← 同一块内存</span></code></pre>
+
+<figure class="fig">
+  <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="640" height="210" fill="#FFFFFF"/>
+    <rect x="40" y="70" width="118" height="66" rx="14" fill="#F7EFE7" stroke="#D9C9B8" stroke-width="2"/>
+    <text x="99" y="100" text-anchor="middle" font-family="Consolas" font-size="14" fill="#5C5F7A">cv::Mat</text>
+    <text x="99" y="120" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#8A7F72">原始帧</text>
+
+    <path d="M162 103 L206 103" stroke="#E07A5F" stroke-width="2.5"/>
+    <path d="M206 103 l-9 -5 v10 z" fill="#E07A5F"/>
+
+    <rect x="210" y="52" width="150" height="102" rx="14" fill="#FFF3E6" stroke="#E07A5F" stroke-width="2.5"/>
+    <text x="285" y="88" text-anchor="middle" font-family="Microsoft YaHei" font-size="15" fill="#B5533C" font-weight="700">drawOverlay()</text>
+    <text x="285" y="112" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#8A7F72">原地修改，只调一次</text>
+    <text x="285" y="134" text-anchor="middle" font-family="Consolas" font-size="11" fill="#81B29A">同一个 Mat</text>
+
+    <path d="M364 84 L424 55" stroke="#81B29A" stroke-width="2.5"/>
+    <path d="M424 55 l-10 -1 l4 9 z" fill="#81B29A"/>
+    <path d="M364 122 L424 152" stroke="#81B29A" stroke-width="2.5"/>
+    <path d="M424 152 l-10 1 l4 -9 z" fill="#81B29A"/>
+
+    <rect x="428" y="24" width="172" height="58" rx="12" fill="#EEF6F2" stroke="#81B29A" stroke-width="2"/>
+    <text x="514" y="48" text-anchor="middle" font-family="Consolas" font-size="13" fill="#4A7C64">sink.write(frame)</text>
+    <text x="514" y="68" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#5C5F7A">写入 output/</text>
+
+    <rect x="428" y="126" width="172" height="58" rx="12" fill="#EEF6F2" stroke="#81B29A" stroke-width="2"/>
+    <text x="514" y="150" text-anchor="middle" font-family="Consolas" font-size="13" fill="#4A7C64">cv::imshow(...)</text>
+    <text x="514" y="170" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#5C5F7A">显示到屏幕</text>
+  </svg>
+  <figcaption>画一次，两处消费同一份像素 —— 一致性不需要"保证"，而是结构上就不可能不一致</figcaption>
+</figure>
+
+<p>这就是整件事最漂亮的地方：<b>不需要额外去"保证"一致性，因为两者物理上是同一块内存。</b></p>
+
+<div class="card warn">
+  <p style="margin-top:0"><b>顺序也很重要</b></p>
+  <p style="margin-bottom:0">必须是「先画 → 再写 → 最后显示」。
+     如果写成「先写 → 再画」，视频里就没有叠加信息了；
+     如果写成「先显示 → 再画 → 再写」，屏幕上看到的和视频里的又会对不上。</p>
+</div>
+
+<h2 id="fps">五、两个 FPS：最容易答错的问题</h2>
+
+<p>程序里其实有<b>两个</b>帧率，含义完全不同。混淆它们是这类作业里最常见的扣分点。</p>
+
+<table>
+  <tr><th>名称</th><th>是什么</th><th>用在哪</th><th>能否替换</th></tr>
+  <tr>
+    <td><b>屏显 FPS</b></td>
+    <td>程序实际处理一帧的速度（实测吞吐）</td>
+    <td>画在画面左上角</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>容器帧率</b></td>
+    <td>输入视频本身的 <code>CAP_PROP_FPS</code></td>
+    <td>传给 <code>VideoWriter</code></td>
+    <td><b style="color:#B5533C">绝对不行</b></td>
+  </tr>
+</table>
+
+<p>如果把实测吞吐当成容器帧率传进去，会发生什么？</p>
+
+<div class="punch">
+  一段 6 秒的视频，实测处理速度 12 fps。<br>
+  拿 12 当容器帧率写出去 → 播放器认为这 180 帧只该播 <strong>15 秒</strong>，
+  于是<strong>输出视频变成了慢动作</strong>。
+</div>
+
+<p>实测数据也印证了这点：本机处理 1280×720 的视频，屏显 FPS 只有 11.8
+（因为 H.264 软件编码很吃 CPU），但输出视频的容器帧率仍然是 30，
+用 ffprobe 查出来 <code>duration=6.000000</code>、<code>nb_frames=180</code>，<b>完全正确</b>。</p>
+
+<h3>FPS 数字怎么算才好看</h3>
+
+<p>三种做法的对比：</p>
+
+<table>
+  <tr><th>做法</th><th>效果</th></tr>
+  <tr><td>总帧数 ÷ 总时间</td><td>前期严重偏低，后期几乎不动，看不出卡顿</td></tr>
+  <tr><td>1 ÷ 单帧耗时</td><td>数字乱跳，在 18 和 60 之间闪，观感很差</td></tr>
+  <tr><td><b>滑动窗口 + 指数平滑</b>（本工程）</td><td>稳定、对卡顿敏感、首帧不会闪 0.0</td></tr>
+</table>
+
+<p>核心是两句话：</p>
+
+<pre><code><span class="c">// 最近 30 帧的平均；次数不足 2 次就返回 0，界面会渲染成 "--"</span>
+<span class="k">if</span> (m_stamps.size() &lt; 2) <span class="k">return</span>;
+
+<span class="k">const</span> <span class="k">double</span> instantFps = (m_stamps.size() - 1) / span;
+m_lastFps = (m_lastFps &lt;= 0.0) ? instantFps : (0.8 * m_lastFps + 0.2 * instantFps);</code></pre>
+
+<div class="card tip">
+  <p style="margin-top:0"><b>为什么首帧要显示 <code>--</code> 而不是 <code>0.0</code>？</b></p>
+  <p style="margin-bottom:0">第一帧的时候还没有"时间差"可以算，显示 0.0 会让人以为程序卡住了。
+     显示 <code>--</code> 则一眼就知道"还没开始统计"，这是体验细节。</p>
+</div>
+
+<h2 id="errors">六、报错速查表</h2>
+
+<table>
+  <tr><th>现象</th><th>真正的原因</th><th>怎么修</th></tr>
+  <tr>
+    <td>程序跑起来没窗口，也不报错</td>
+    <td>没装 Qt6 运行库</td>
+    <td><code>pacman -S mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-qt6-5compat</code></td>
+  </tr>
+  <tr>
+    <td><code>no Qt platform plugin could be initialized</code></td>
+    <td>找不到 <code>platforms/qwindows.dll</code>（插件是运行时加载的）</td>
+    <td>在 UCRT64 终端里运行；或设 <code>QT_QPA_PLATFORM_PLUGIN_PATH</code>；或跑打包脚本</td>
+  </tr>
+  <tr>
+    <td><code>找不到 libopencv_core-500.dll</code></td>
+    <td><code>PATH</code> 里没有 <code>C:/msys64/ucrt64/bin</code></td>
+    <td>在 UCRT64 终端里运行</td>
+  </tr>
+  <tr>
+    <td>按 Esc 没反应</td>
+    <td>Qt 窗口需要先获得焦点才能收键盘事件</td>
+    <td>先用鼠标点一下画面，再按 Esc</td>
+  </tr>
+  <tr>
+    <td>输出的 mp4 是 0 字节</td>
+    <td><code>release()</code> 没执行，mp4 的索引没写入</td>
+    <td>本工程用析构函数强制 release，正常不会发生</td>
+  </tr>
+  <tr>
+    <td><code>find_package(OpenCV 4 ...)</code> 报版本不兼容</td>
+    <td>OpenCV 的 config 用 SameMajorVersion 策略，5.0 与"请求 4"不兼容</td>
+    <td>去掉版本号：<code>find_package(OpenCV REQUIRED ...)</code></td>
+  </tr>
+  <tr>
+    <td>控制台中文乱码</td>
+    <td>GBK 代码页 + UTF-8 字节</td>
+    <td>程序已在第一行调 <code>SetConsoleOutputCP(CP_UTF8)</code>；老终端可 <code>chcp 65001</code></td>
+  </tr>
+  <tr>
+    <td>图片路径含中文读不出来</td>
+    <td>OpenCV 内部用窄字符 <code>fopen</code></td>
+    <td>已加 <code>imdecode</code> 兜底；仍建议用纯英文路径</td>
+  </tr>
+</table>
+
+<h2 id="qa">七、答辩预演：老师可能问的 8 个问题</h2>
+
+<div class="card">
+  <h3 style="margin-top:0">1. 为什么帧号从 1 开始？</h3>
+  <p style="margin-bottom:0">因为我把 <code>frameNumber()</code> 定义为「已成功读取的帧数」，
+     所以读完第一帧它就是 1，屏显 <code>Frame 1 / 750</code> 不需要额外换算。
+     而且读取失败时我不推进帧号，所以收尾统计「共处理 N 帧」是准确的，
+     不会比总帧数多 1。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">2. 怎么保证输出视频里的信息和屏幕一致？</h3>
+  <p style="margin-bottom:0">因为我只画一次。<code>drawOverlay</code> 原地修改 <code>frame</code>，
+     然后同一块 <code>cv::Mat</code> 分别交给 <code>write()</code> 和 <code>imshow()</code>。
+     两者消费的是同一份像素，结构上就不可能不一致——不需要靠两处代码写得一样来碰运气。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">3. 主程序真的没碰 VideoCapture 吗？怎么证明？</h3>
+  <p>不但没碰，而且<b>碰不到</b>。<code>video_reader.h</code> 里 <code>cv::VideoCapture</code>
+     只有前置声明，完整定义只在 <code>video_reader.cpp</code> 里。
+     主程序包含的头文件拿不到这个类型，写了就编译不过。</p>
+  <p style="margin-bottom:0">另外可以用 <code>rg "VideoCapture" src/ include/</code> 验证，只会命中两个文件。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">4. 屏显的 FPS 为什么只有 12，不应该 30 吗？</h3>
+  <p style="margin-bottom:0">这两个是不同的东西。屏显的是<b>实际处理吞吐</b>，包含了 H.264 软件编码的开销，
+     所以是 12 左右，这是真实测量值，我不去美化它。
+     而<b>容器帧率</b>取的是源视频的 30，所以输出视频时长仍然是准确的 6 秒。
+     如果我拿 12 当容器帧率，输出就会变成慢动作。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">5. <code>at&lt;Vec3b&gt;</code> 的两个参数是什么顺序？</h3>
+  <p style="margin-bottom:0">是（行, 列），也就是 <code>(y, x)</code>。
+     写反了不会报错，只会读到另一个像素——所以必须记住。
+     另外 <code>Vec3b</code> 的下标顺序是 B、G、R，不是 R、G、B。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">6. 为什么至少要拆两个函数？你拆了几个？</h3>
+  <p>拆了 7 个。原则是：主流程函数只负责编排和错误分支；
+     凡是<b>可能单独失败</b>（比如读图、创建输出视频）或者<b>被多处共用</b>（比如叠加信息）
+     的逻辑，都下沉成独立函数。</p>
+  <p style="margin-bottom:0">所以 <code>loadImageStrict</code>、<code>openWithFallback</code>、
+     <code>drawOverlay</code> 是"必须"独立，而不是为了凑数把 5 行代码包一层。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">7. 如果视频编码器不可用怎么办？</h3>
+  <p style="margin-bottom:0">我做了 5 级降级：avc1/mp4 → mp4v/mp4 → XVID/avi → MJPG/avi → FFV1/avi，
+     逐个尝试，全部失败才报错，并且会把<b>试过哪些组合</b>打印出来，
+     而不是只说一句"失败了"。另外 FFV1 支持任意尺寸，
+     所以遇到奇数宽高（如 641×481）也能兜住。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">8. 为什么不直接 <code>imshow</code> 完就 <code>waitKey(0)</code>？</h3>
+  <p style="margin-bottom:0">图片模式确实是 <code>waitKey(0)</code>，因为只需要等一次按键。
+     但视频模式必须每帧都调 <code>waitKey(delay)</code>——它不只是"等按键"，
+     还负责驱动窗口刷新和分发鼠标/键盘事件。不调用它，画面根本不会重绘。
+     而 <code>delay</code> 顺便充当了播放速度控制。</p>
+</div>
+
+<footer>
+  cv_hw · 第一周综合练习 · 配套 README.md 使用
+</footer>
+
+</div>
+</body>
+</html>

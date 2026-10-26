@@ -1,0 +1,38 @@
+# 本地构建配置（VS Code 的 CMake Tools 插件会自动识别本文件）
+#
+# 本机环境：MSYS2 UCRT64 + GCC + Ninja
+# 换到别的机器（例如装了 Visual Studio + OpenCV 4.x 的机房电脑）时，
+# 直接删掉本文件、改用默认工具链即可，源码一行都不用改。
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "ucrt64-release",
+      "displayName": "MSYS2 UCRT64 (Ninja, Release)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "D:/msys64/ucrt64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "D:/msys64/ucrt64/bin/g++.exe",
+        "CMAKE_RC_COMPILER": "D:/msys64/ucrt64/bin/windres.exe"
+      },
+      "environment": {
+        "PATH": "D:/msys64/ucrt64/bin;$penv{PATH}"
+      }
+    },
+    {
+      "name": "ucrt64-debug",
+      "inherits": "ucrt64-release",
+      "displayName": "MSYS2 UCRT64 (Ninja, Debug)",
+      "binaryDir": "${sourceDir}/build-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "release", "configurePreset": "ucrt64-release" },
+    { "name": "debug", "configurePreset": "ucrt64-debug" }
+  ]
+}
