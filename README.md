@@ -280,8 +280,13 @@ private:
 静态验证：
 
 ```bash
-rg "VideoCapture" src/ include/
-# 预期只命中 include/video_reader.h（前置声明）与 src/video_reader.cpp（真实使用）
+# 1) 主程序里有没有"非注释"的 VideoCapture 用法？（预期：无输出）
+rg -n "^\s*[^/\s].*VideoCapture" src/video_mode.cpp
+
+# 2) 全工程看看这个词都出现在哪（注释里提到它是正常的，因为要解释设计）
+rg -n "VideoCapture" src/ include/
+#    实际命中：video_reader.h 的前置声明与私有成员、video_reader.cpp 的真实使用、
+#    以及若干解释性注释。主程序 video_mode.cpp 中命中项全部是 "//" 开头的注释行。
 ```
 
 ### 6.3 叠加一致性：为什么不可能不一致
@@ -520,7 +525,7 @@ cmake --build build --config Release
 | 8 | `ls output/` | 生成同名视频，体积非 0 | 保存 20 分 |
 | 9 | 播放 `output/motion.mp4` | 能播；左上角三行信息与运行时逐字相同 | 一致性 |
 | 10 | `./build/cv_hw.exe video assets/motion2.avi` | 640×480@25，共 125 帧 | 复测 |
-| 11 | `rg "VideoCapture" src/ include/` | 只命中 `video_reader.h` / `.cpp` | VideoReader 设计 |
+| 11 | `rg -n "^\s*[^/\s].*VideoCapture" src/video_mode.cpp` | 无输出（主程序里没有任何非注释用法） | VideoReader 设计 |
 
 ---
 

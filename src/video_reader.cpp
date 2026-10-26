@@ -2,9 +2,7 @@
 //  video_reader.cpp —— VideoReader 的实现
 //
 //  这里是全工程唯一真正使用 cv::VideoCapture 的地方（另外只在头文件里有一句
-//  前置声明）。可以这样自证（在工程根目录执行）：
-//      rg "VideoCapture" src/ include/
-//  结果只会命中 video_reader.h 与 video_reader.cpp。
+//  前置声明）。其它文件里出现的 VideoCapture 字样全部是注释。
 // ============================================================================
 #include "video_reader.h"
 
