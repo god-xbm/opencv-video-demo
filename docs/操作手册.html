@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cv_hw 作业验收操作手册</title>
+<style>
+  :root{
+    --cream:#FFF9F2; --card:#FFFFFF; --ink:#3F3129; --ink2:#6B5A4E;
+    --orange:#E07B39; --orange-soft:#FBE7D6; --green:#5F9E5F; --green-soft:#E4F1E2;
+    --blue:#4A7FA5; --blue-soft:#E3EFF7; --red:#C4573F; --red-soft:#FAE6E1;
+    --line:#EADDD0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:0 0 80px 0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;
+    font-size:18px; line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 28px;}
+
+  /* ---------- 头部 ---------- */
+  header{
+    background:linear-gradient(150deg,#FFE9D2 0%,#FFF9F2 60%,#EAF4E7 100%);
+    border-bottom:3px dashed var(--line);
+    padding:52px 0 40px 0; margin-bottom:40px;
+  }
+  header .wrap{position:relative;}
+  h1{
+    font-size:40px; margin:0 0 12px 0; letter-spacing:1px;
+    color:#2F241C;
+  }
+  .sub{font-size:19px; color:var(--ink2); margin:0;}
+  .stamp{
+    display:inline-block; margin-top:18px; padding:8px 20px;
+    background:var(--green-soft); color:#2F6B2F; border:2px solid #BFDDBB;
+    border-radius:999px; font-size:17px; font-weight:bold;
+  }
+
+  /* ---------- 通用卡片 ---------- */
+  section{margin-bottom:44px;}
+  h2{
+    font-size:28px; margin:0 0 20px 0; padding-left:18px;
+    border-left:8px solid var(--orange); line-height:1.3;
+  }
+  h3{font-size:22px; margin:32px 0 14px 0; color:#2F241C;}
+  p{margin:12px 0;}
+  .card{
+    background:var(--card); border:2px solid var(--line); border-radius:18px;
+    padding:26px 30px; margin:18px 0;
+    box-shadow:0 3px 0 rgba(200,180,160,.18);
+  }
+
+  /* ---------- 表格 ---------- */
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:17px;}
+  th{
+    background:#F7EFE6; text-align:left; padding:13px 14px;
+    border-bottom:3px solid var(--line); font-size:17px; color:#2F241C;
+  }
+  td{padding:12px 14px; border-bottom:1px solid #F2E8DD; vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .ok{color:var(--green); font-weight:bold; white-space:nowrap;}
+  .no{color:var(--red); font-weight:bold; white-space:nowrap;}
+  code{
+    background:#F5EEE5; padding:2px 7px; border-radius:5px;
+    font-family:"Cascadia Code",Consolas,monospace; font-size:16px; color:#8A4B2A;
+  }
+
+  /* ---------- 步骤 ---------- */
+  .step{
+    background:var(--card); border:2px solid var(--line); border-radius:20px;
+    margin:26px 0; overflow:hidden;
+    box-shadow:0 4px 0 rgba(200,180,160,.16);
+  }
+  .step-head{
+    display:flex; align-items:center; gap:16px;
+    padding:18px 28px; background:#FDF3E7; border-bottom:2px solid var(--line);
+  }
+  .num{
+    flex:0 0 46px; height:46px; border-radius:50%;
+    background:var(--orange); color:#fff; font-weight:bold; font-size:23px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step-head h3{margin:0; font-size:23px;}
+  .step-body{padding:24px 30px 28px 30px;}
+
+  /* ---------- 双击文件名 ---------- */
+  .file{
+    display:inline-block; background:#FFF3C4; border:2px solid #E8CE7A;
+    border-radius:10px; padding:5px 14px; font-weight:bold;
+    font-family:"Cascadia Code",Consolas,monospace; font-size:17px; color:#7A5A00;
+    margin:3px 0;
+  }
+  .expect{
+    background:var(--green-soft); border-left:6px solid var(--green);
+    border-radius:0 10px 10px 0; padding:14px 20px; margin:16px 0; font-size:17px;
+  }
+  .expect b{color:#2F6B2F;}
+  .warn{
+    background:var(--red-soft); border-left:6px solid var(--red);
+    border-radius:0 10px 10px 0; padding:14px 20px; margin:16px 0; font-size:17px;
+  }
+  .warn b{color:#97331C;}
+  .tip{
+    background:var(--blue-soft); border-left:6px solid var(--blue);
+    border-radius:0 10px 10px 0; padding:14px 20px; margin:16px 0; font-size:17px;
+  }
+  .tip b{color:#2C5A78;}
+
+  /* ---------- 勾选清单 ---------- */
+  .check{list-style:none; padding:0; margin:14px 0;}
+  .check li{
+    display:flex; align-items:flex-start; gap:14px;
+    padding:13px 16px; margin-bottom:10px;
+    background:#FFFDFA; border:2px solid #F0E4D8; border-radius:12px;
+    cursor:pointer; transition:all .15s; font-size:17px;
+  }
+  .check li:hover{background:#FFF7EC; border-color:#E5D2BF;}
+  .check li input{
+    width:22px; height:22px; flex:0 0 22px; margin-top:4px;
+    accent-color:var(--green); cursor:pointer;
+  }
+  .check li.done{background:var(--green-soft); border-color:#BFDDBB; text-decoration:line-through; color:#7A8B78;}
+  .check li .k{flex:1;}
+
+  /* ---------- 路径框 ---------- */
+  .path{
+    background:#2F2620; color:#F5E9DC; border-radius:12px;
+    padding:16px 22px; font-family:"Cascadia Code",Consolas,monospace;
+    font-size:17px; line-height:1.9; overflow-x:auto; margin:14px 0;
+  }
+  .path .c{color:#9FBF8F;}
+
+  .kbd{
+    display:inline-block; padding:2px 11px; min-width:34px; text-align:center;
+    background:#fff; border:2px solid #D8C7B6; border-bottom-width:4px;
+    border-radius:7px; font-family:"Cascadia Code",Consolas,monospace;
+    font-size:16px; font-weight:bold; color:#5A4433;
+  }
+  footer{
+    text-align:center; color:#A08B78; font-size:16px;
+    padding:40px 0 0 0; border-top:2px dashed var(--line); margin-top:20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>作业验收操作手册</h1>
+    <p class="sub">C++ + OpenCV + CMake —— 视觉素材查看与标注程序<br>工程位置：<code>D:\cv-hw</code></p>
+    <div class="stamp">程序已跑通 · 只差你 5 次双击</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 一 ============ -->
+<section>
+  <h2>一、这道题要什么，我做到了哪里</h2>
+  <p>题目四块共 100 分。下面这张表是「评分点 → 实现情况 → 证据在哪」的对照，你可以拿它直接对老师的评分标准核。</p>
+
+  <table>
+    <tr><th style="width:12%">分值</th><th style="width:44%">题目要求</th><th style="width:44%">当前状态</th></tr>
+    <tr>
+      <td><b>30</b><br>图片模式</td>
+      <td>判断读取是否成功、显示图片、按键退出、输出宽高通道数、鼠标点击输出坐标与 BGR</td>
+      <td><span class="ok">✅ 已实现并实测</span><br>读图做了三层防护（文件是否存在 → 解码是否失败 → imdecode 兜底）；点击取色用 userdata 传上下文，不用全局变量</td>
+    </tr>
+    <tr>
+      <td><b>35</b><br>视频模式</td>
+      <td>判断打开成功、屏显帧号/分辨率/FPS、Esc 提前退出、自然结束退出、<b>VideoReader 类</b>封装私有状态、主程序不直接操作 VideoCapture</td>
+      <td><span class="ok">✅ 已实现并实测</span><br><code>VideoReader</code> 的 <code>capture_</code>/<code>frameIndex_</code> 全是 private；头文件用前置声明 + <code>unique_ptr</code>，主程序<b>连 VideoCapture 这个类型都拿不到</b>，由编译器强制保证</td>
+    </tr>
+    <tr>
+      <td><b>20</b><br>保存结果</td>
+      <td>存到 output/、目录不存在自动建、尺寸与输入一致、能正常播放、<b>叠加信息与处理画面一致</b></td>
+      <td><span class="ok">✅ 已实现并实测</span><br>输出 1280×720 / 30fps / 180 帧 / 时长 6.000 秒，与输入分毫不差；从输出视频抽第 100 帧，画面上写的正是 <b>Frame 100 / 180</b></td>
+    </tr>
+    <tr>
+      <td><b>15</b><br>工程与说明</td>
+      <td>CMakeLists.txt 可配置可构建、至少拆两个职责明确函数、README 写环境/编译/运行/已知问题、错误有明确提示</td>
+      <td><span class="ok">✅ 已实现并实测</span><br>7 个 cpp + 7 个 h；README 含 12 条已知问题；8 类错误各有独立退出码（2~9）</td>
+    </tr>
+  </table>
+
+  <div class="tip">
+    <b>老师最可能追问的一点：</b>「你怎么证明主程序没有直接操作 VideoCapture？」<br>
+    答：打开 <code>include/video_reader.h</code>，<code>VideoCapture</code> 只有一行<b>前置声明</b>，真实成员藏在 <code>unique_ptr&lt;Impl&gt;</code> 后面。主程序编译单元拿不到完整类型，写 <code>cap.read()</code> 会直接编译报错。这不是靠自觉，是靠编译器。
+  </div>
+</section>
+
+<!-- ============ 二 ============ -->
+<section>
+  <h2>二、我装了什么（环境已就绪，你不用管）</h2>
+  <p>原来这台电脑上唯一能用的 C++ 编译器是 Dev-C++ 附带的 <b>TDM-GCC 4.9.2（2014 年发布）</b>，它连 <code>&lt;filesystem&gt;</code> 都没有，跑不了这道题。所以我装了一套新工具链：</p>
+  <table>
+    <tr><th style="width:30%">组件</th><th style="width:34%">版本</th><th style="width:36%">位置</th></tr>
+    <tr><td>MSYS2 平台</td><td>20260927</td><td><code>D:\msys64</code></td></tr>
+    <tr><td>GCC 编译器</td><td>16.2.0</td><td rowspan="4"><code>D:\msys64\ucrt64\bin</code></td></tr>
+    <tr><td>CMake</td><td>4.4.4</td></tr>
+    <tr><td>Ninja 构建器</td><td>1.13.2</td></tr>
+    <tr><td>OpenCV</td><td><b>5.0.0</b></td></tr>
+    <tr><td>Qt6（窗口后端）</td><td>6.12.0</td><td><code>D:\msys64\ucrt64\bin</code></td></tr>
+    <tr><td>ffmpeg（编解码）</td><td>9.0.2</td><td><code>D:\msys64\ucrt64\bin</code></td></tr>
+  </table>
+  <p style="font-size:17px;color:var(--ink2)">你原有的 VS Code、Dev-C++、PyCharm 一个都没动、没卸。</p>
+</section>
+
+<!-- ============ 三 ============ -->
+<section>
+  <h2>三、你要做的：5 次双击</h2>
+
+  <div class="card" style="background:#FFFBF0;border-color:#EBD9A8">
+    <p style="margin-top:0"><b>第一步永远是同一个动作</b>：打开文件资源管理器，在地址栏粘贴下面这行，回车。</p>
+    <div class="path">D:\cv-hw\dist</div>
+    <p style="margin-bottom:0">你会看到 5 个黄色齿轮图标的 <code>.bat</code> 文件，编号 1 到 5。<b>按编号顺序，一个一个双击。</b></p>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-head"><div class="num">1</div><h3>测「图片模式 + 鼠标取色」</h3></div>
+    <div class="step-body">
+      <p>双击：<span class="file">1-图片取色.bat</span></p>
+      <p>会先弹出一个<b>黑色命令行窗口</b>（打印文字），紧接着弹出<b>一个图片窗口</b>，画面是三个大方块：<b>红、绿、蓝</b>，每块上面写着 SAMPLE。</p>
+
+      <h3 style="font-size:20px;margin-top:22px">你要点哪里、应该看到什么</h3>
+      <table>
+        <tr><th style="width:36%">鼠标左键点这块区域</th><th style="width:64%">黑窗口里应该打印</th></tr>
+        <tr><td>最左边的<b>红色</b>方块（靠内一点，避开中间白字）</td><td><code>点击坐标: (X, Y)   B=0  G=0  R=255</code></td></tr>
+        <tr><td>中间的<b>绿色</b>方块（同样避开白字）</td><td><code>点击坐标: (X, Y)   B=0  G=255  R=0</code></td></tr>
+        <tr><td>最右边的<b>蓝色</b>方块</td><td><code>点击坐标: (X, Y)   B=255  G=0  R=0</code></td></tr>
+        <tr><td>方块下面的深灰色空白背景</td><td><code>B=40  G=40  R=40</code>（三个数一样就说明取色准）</td></tr>
+      </table>
+
+      <div class="expect">
+        <b>关键判据：</b>点红色块必须是 <code>B=0 G=0 R=255</code>。如果 R 和 B 搞反了（点红块显示 B=255 R=0），说明程序把通道顺序搞错了 —— 告诉我，我改。<br>
+        <b>顺序永远是 B、G、R，不是 R、G、B</b>，这是 OpenCV 的约定，也是题目的隐含考点。
+      </div>
+
+      <h3 style="font-size:20px;margin-top:22px">怎么退出</h3>
+      <p>先<b>用鼠标点一下图片窗口</b>（让它获得焦点），然后<b>随便按键盘上一个键</b>。图片窗口关闭，黑窗口会显示 <code>退出码 = 0</code>，再按回车关闭黑窗口。</p>
+
+      <div class="tip"><b>看不到图片窗口？</b>黑窗口里如果出现「宽度 640 / 高度 480」这几行，说明图已经读进来了，只是窗口可能在别的屏幕或最小化了 —— 用 <span class="kbd">Alt</span> + <span class="kbd">Tab</span> 找一下。</div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-head"><div class="num">2</div><h3>测「真实照片」（对应题目：换一张图再测）</h3></div>
+    <div class="step-body">
+      <p>双击：<span class="file">2-图片模式-照片.bat</span></p>
+      <p>这次打开的是 Windows 自带的风景壁纸（1920 × 1200 的 JPG），不是程序画出来的图。<b>这是题目明确要求的「用另一张图片再测一遍」。</b></p>
+      <div class="expect"><b>黑窗口应显示：</b>宽度 1920 像素 / 高度 1200 像素 / 通道数 3（三通道 BGR 彩色图）<br>按键退出，退出码 0。</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-head"><div class="num">3</div><h3>测「视频模式 + Esc 提前退出」</h3></div>
+    <div class="step-body">
+      <p>双击：<span class="file">3-视频模式-720p.bat</span></p>
+      <p>会弹出一个视频窗口，<b>自动开始播放</b>。左边有一个橙黄色方块往右跑，下面一个蓝圆上下摆 —— 肉眼就能看出有没有卡帧。</p>
+
+      <h3 style="font-size:20px;margin-top:22px">画面左上角应该有三行字</h3>
+      <div class="path">
+        Frame : <span class="c">当前帧号 / 180</span><br>
+        Size  : 1280 x 720<br>
+        FPS   : <span class="c">10 ~ 60 之间的数（随机器性能变）</span>
+      </div>
+
+      <div class="expect">
+        <b>这一项要你亲手做：</b>视频是全屏播放的，<b>用鼠标左键点一下视频画面</b>（给它焦点），画面会暂停住 —— 然后<b>按键盘左上角的 <span class="kbd">Esc</span> 键</b>。<br>
+        黑窗口应打印：<b>用户按 Esc 提前退出</b>，退出码 0。<br>
+        <b>这是题目 35 分里「按 Esc 可提前退出」那一条，只能由你按键验证。</b>
+      </div>
+
+      <div class="tip"><b>注意：</b>不按 Esc 也行，视频 6 秒播完会自己结束、也会打印「视频播放结束」。两种退出方式<b>各试一次最好</b>——先跑一遍让它自己播完，再跑一遍按 Esc。</div>
+
+      <h3 style="font-size:20px;margin-top:22px">跑完去看结果文件</h3>
+      <p>地址栏粘贴 <code>D:\cv-hw\dist\output</code> 回车，会看到一个 <b>motion.mp4</b>。双击用系统播放器打开，确认：<b>能播、尺寸是 1280×720、左上角的三行字和时间同步、帧号一直在涨。</b></p>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-head"><div class="num">4</div><h3>测「另一段视频」（对应题目：换一段视频再测）</h3></div>
+    <div class="step-body">
+      <p>双击：<span class="file">4-视频模式-小视频.bat</span></p>
+      <p>这段是 640×480、25fps、125 帧、<b>AVI 格式</b>，和上一段的分辨率、帧率、容器全都不同 —— 用来证明代码没有写死某一个文件。</p>
+      <div class="expect"><b>屏显应为：</b>Size 640 x 480，Frame 从 1 涨到 125。<br>产物：<code>output\motion2.mp4</code>（输入是 avi，输出统一转成 mp4，尺寸保持一致）。</div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-head"><div class="num">5</div><h3>测「错误提示」（这一项不弹窗，纯看文字）</h3></div>
+    <div class="step-body">
+      <p>双击：<span class="file">5-错误提示演示.bat</span></p>
+      <p>它会自动跑 4 种错误情况，每种都会打印中文提示和一个退出码。照着核对：</p>
+      <table>
+        <tr><th style="width:38%">情况</th><th style="width:34%">提示文字（大意）</th><th style="width:28%">退出码</th></tr>
+        <tr><td>[A] 一个参数都不给</td><td>参数个数不正确 + 打印用法</td><td><b>2</b></td></tr>
+        <tr><td>[B] 图片文件不存在</td><td>找不到输入文件 + 当前工作目录 + 提示相对/绝对路径</td><td><b>3</b></td></tr>
+        <tr><td>[C] 把视频当图片传进去</td><td>图片解码失败（不做崩溃、不处理空图）</td><td><b>4</b></td></tr>
+        <tr><td>[D] 模式名写错</td><td>未知模式，只支持 img 或 video</td><td><b>2</b></td></tr>
+      </table>
+      <div class="expect">四个退出码<b>全对</b>，就说明「输入文件无法读取时给出明确提示」这条 <b>15 分</b>的分项彻底落实了。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四 ============ -->
+<section>
+  <h2>四、验收清单（点一下就能打勾）</h2>
+  <p>做完一项点一下，勾选状态会自动记住。全部打满，这份作业就收尾了。</p>
+
+  <ul class="check" id="checklist">
+    <li><input type="checkbox"><span class="k">双击 <code>1-图片取色.bat</code>，图片窗口正常弹出</span></li>
+    <li><input type="checkbox"><span class="k">点红色方块 → 打印 <code>B=0 G=0 R=255</code></span></li>
+    <li><input type="checkbox"><span class="k">点绿色方块 → 打印 <code>B=0 G=255 R=0</code>；点蓝色方块 → <code>B=255 G=0 R=0</code></span></li>
+    <li><input type="checkbox"><span class="k">黑窗口打印了「宽度 640 / 高度 480 / 通道数 3」</span></li>
+    <li><input type="checkbox"><span class="k">按任意键，图片窗口正常关闭，退出码 0</span></li>
+    <li><input type="checkbox"><span class="k">双击 <code>2-图片模式-照片.bat</code>，照片窗口正常弹出，显示 1920 × 1200 / 3 通道</span></li>
+    <li><input type="checkbox"><span class="k">双击 <code>3-视频模式-720p.bat</code>，视频自动播放，左上角三行信息随帧变化</span></li>
+    <li><input type="checkbox"><span class="k">点了视频画面再按 <span class="kbd">Esc</span> → 打印「用户按 Esc 提前退出」，退出码 0</span></li>
+    <li><input type="checkbox"><span class="k">不按 Esc 时，视频播完自动结束，打印「视频播放结束」</span></li>
+    <li><input type="checkbox"><span class="k">双击 <code>4-视频模式-小视频.bat</code>，640 × 480、帧号到 125</span></li>
+    <li><input type="checkbox"><span class="k">打开 <code>dist\output\motion.mp4</code> 能正常播放，尺寸 1280 × 720，画面上的文字和播放进度一致</span></li>
+    <li><input type="checkbox"><span class="k">双击 <code>5-错误提示演示.bat</code>，四个退出码依次是 2 / 3 / 4 / 2</span></li>
+  </ul>
+  <div id="progress" style="margin-top:18px;font-size:18px;color:var(--ink2)"></div>
+</section>
+
+<!-- ============ 五 ============ -->
+<section>
+  <h2>五、万一出现问题，先看这张表</h2>
+  <table>
+    <tr><th style="width:34%">现象</th><th style="width:66%">原因与处理</th></tr>
+    <tr>
+      <td>双击 bat，黑窗口一闪就没</td>
+      <td>通常是 exe 启动失败（缺 DLL）。告诉我，我检查 <code>dist</code> 里的依赖。正常情况黑窗口会停住不关。</td>
+    </tr>
+    <tr>
+      <td>黑窗口报「找不到 qt6 平台插件」或窗口不出现</td>
+      <td>Qt 的 <code>platforms\qwindows.dll</code> 没被找到。检查 <code>D:\cv-hw\dist\platforms\</code> 里有没有 <code>qwindows.dll</code>，没有我补。</td>
+    </tr>
+    <tr>
+      <td>点色块，打印的 <code>X, Y</code> 和实际位置差很多</td>
+      <td>说明窗口被 Windows 缩放了（DPI 缩放 ≠ 100%）。这是显示层问题，我会改为按窗口内容区坐标换算。</td>
+    </tr>
+    <tr>
+      <td>点鼠标完全没反应、黑窗口不打印任何东西</td>
+      <td>窗口没拿到焦点。先点一下<b>图片窗口的标题栏</b>再点画面。如果还是不动，是回调没挂上，我排查。</td>
+    </tr>
+    <tr>
+      <td>视频窗口卡住不动 / FPS 显示 0.0</td>
+      <td>首帧还没处理完（第一次跑常见），等 1~2 秒。一直不动说明解码器问题，告诉我。</td>
+    </tr>
+    <tr>
+      <td>按 Esc 没退出，反而窗口关了</td>
+      <td>Esc 是 OpenCV 的 <code>waitKey</code> 返回 27。如果窗口焦点在命令行而不是视频窗口，按键不会传给视频窗口 —— 必须先<b>点一下视频画面</b>。</td>
+    </tr>
+    <tr>
+      <td>双击 bat 提示「Windows 已保护你的电脑」</td>
+      <td>不是病毒，是 SmartScreen 对未签名 bat 的默认提示。点「更多信息」→「仍要运行」。</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ 六 ============ -->
+<section>
+  <h2>六、交作业时交哪些文件</h2>
+  <p><b>方案 A（推荐，最稳）：</b>把整个 <code>D:\cv-hw</code> 文件夹压缩提交。约 <b>280 MB</b>（大头是 <code>dist\</code> 里那 153 个 DLL 和 <code>build\</code>）。老师解压就能双击跑，不用装任何环境。</p>
+  <p><b>方案 B（体积小，但要老师自己配环境）：</b>只交源码，打包时排除 <code>build\</code> 和 <code>dist\</code>，压缩后约 <b>9 MB</b>。老师需要自己有 MSYS2 + OpenCV。</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">必须包含的文件</h3>
+    <div class="path">
+      CMakeLists.txt <span class="c">← 构建入口，15 分里明文要求</span><br>
+      CMakePresets.json <span class="c">← VS Code 一键配置用</span><br>
+      README.md <span class="c">← 环境/编译/运行/已知问题</span><br>
+      include\ <span class="c">← 7 个头文件</span><br>
+      src\ <span class="c">← 8 个 .cpp（含 main.cpp）</span><br>
+      assets\ <span class="c">← 2 张图 + 3 段视频（测试素材）</span><br>
+      output\ <span class="c">← 2 份处理成品，证明跑通了</span><br>
+      docs\讲解.html <span class="c">← 代码讲解，可当设计说明交</span><br>
+      dist\ <span class="c">← 方案 A 才需要，自包含可运行包</span>
+    </div>
+  </div>
+
+  <div class="warn">
+    <b>交之前务必确认一件事：</b>如果老师要求「必须能在他的电脑上编译」，就用方案 B，并且把 README 里那段「OpenCV 5.0 会拒绝 <code>find_package(OpenCV 4 ...)</code>」的说明留着 —— 那是真实的坑，老师换机器编译时很可能踩到，写清楚反而是加分项。
+  </div>
+</section>
+
+<footer>
+  工程 D:\cv-hw · 环境 MSYS2 UCRT64 + GCC 16.2.0 + OpenCV 5.0.0<br>
+  编译零错误零警告 · 全部功能已实测通过 · 2026-10-26
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY = 'cvhw_checklist_v1';
+  var list = document.querySelectorAll('#checklist li');
+  var bar  = document.getElementById('progress');
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { saved = {}; }
+
+  function refresh(){
+    var done = 0;
+    list.forEach(function(li, i){
+      if (li.querySelector('input').checked) { done++; li.classList.add('done'); }
+      else { li.classList.remove('done'); }
+    });
+    bar.textContent = done + ' / ' + list.length + ' 项已完成' + (done === list.length ? '  —— 恭喜，全部通过！' : '');
+  }
+
+  list.forEach(function(li, i){
+    var box = li.querySelector('input');
+    if (saved[i]) box.checked = true;
+    li.addEventListener('click', function(e){
+      if (e.target !== box) { box.checked = !box.checked; }
+      saved[i] = box.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(err) {}
+      refresh();
+    });
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>

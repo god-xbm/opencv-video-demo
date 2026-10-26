@@ -137,6 +137,14 @@ fi
 [ -f "README.md" ] && cp -f README.md "$DEST/"
 mkdir -p "$DEST/output"
 
+# 双击即用的启动器（内容全是 ASCII，中文只出现在文件名上，cmd 解析不受影响）
+if [ -d "launchers" ]; then
+    for f in launchers/*.bat; do
+        [ -f "$f" ] && cp -f "$f" "$DEST/" 2>/dev/null
+    done
+    echo "已拷贝启动器 → $DEST/*.bat"
+fi
+
 echo ""
 echo "完成。发布包在：$DEST"
 echo "验证方式（清空 PATH 模拟没装 MSYS2 的电脑）："
