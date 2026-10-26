@@ -21,7 +21,7 @@
 //  而是被编译器强制执行的。
 //
 //  检查"主程序里有没有真正使用它"（预期无输出，因为只有注释会提到这个词）：
-//      rg -n "^\s*[^/\s].*VideoCapture" src/video_mode.cpp
+//      grep -n "VideoCapture" src/video_mode.cpp | grep -v "//"
 // ============================================================================
 #pragma once
 
